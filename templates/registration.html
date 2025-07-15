@@ -1,0 +1,635 @@
+{% extends "base.html" %} {% block content %}
+<div class="text-center my-4">
+  <img
+    src="{{ url_for('static', filename='assets/liahonalogo.png') }}"
+    alt="Liahona Academy Logo"
+    style="max-height: 100px;"
+  >
+</div>
+
+<h1 class="mb-4">Student Registration</h1>
+<p class="mb-3">
+  <span class="text-danger">*</span> indicates a required field.
+</p>
+
+<form method="post" enctype="multipart/form-data">
+
+
+  {{ student_form.hidden_tag() }}
+  {{ contact_form1.hidden_tag() }}
+  {{ contact_form2.hidden_tag() }}
+  {{ contact_form3.hidden_tag() }}
+  {{ media_form.hidden_tag() }}
+  {{ waiver_form.hidden_tag() }}
+
+
+  <!-- STUDENT INFORMATION -->
+  <fieldset class="mb-5 border rounded bg-light p-4">
+    <legend class="h5 text-primary px-2">Student Information</legend>
+
+    <!-- School -->
+    <div class="form-group">
+      <label for="{{ student_form.school.id }}">
+        {{ student_form.school.label.text }} <span class="text-danger">*</span>
+      </label>
+      {{ student_form.school(class="form-select" + (" is-invalid" if
+      student_form.school.errors else "")) }} {% for e in
+      student_form.school.errors %}
+      <div class="invalid-feedback">{{ e }}</div>
+      {% endfor %}
+    </div>
+
+    <!-- Name Row -->
+    <div class="form-row">
+      <div class="form-group col">
+        <label for="{{ student_form.first_name.id }}">
+          {{ student_form.first_name.label.text }}
+          <span class="text-danger">*</span>
+        </label>
+        {{ student_form.first_name(class="form-control" + (" is-invalid" if
+        student_form.first_name.errors else "")) }} {% for e in
+        student_form.first_name.errors %}
+        <div class="invalid-feedback">{{ e }}</div>
+        {% endfor %}
+      </div>
+      <div class="form-group col">
+        <label for="{{ student_form.preferred_name.id }}">
+          {{ student_form.preferred_name.label.text }}
+        </label>
+        {{ student_form.preferred_name(class="form-control") }}
+      </div>
+      <div class="form-group col">
+        <label for="{{ student_form.last_name.id }}">
+          {{ student_form.last_name.label.text }}
+          <span class="text-danger">*</span>
+        </label>
+        {{ student_form.last_name(class="form-control" + (" is-invalid" if
+        student_form.last_name.errors else "")) }} {% for e in
+        student_form.last_name.errors %}
+        <div class="invalid-feedback">{{ e }}</div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Demographics Row -->
+    <div class="form-row">
+      <div class="form-group col-3">
+        <label for="{{ student_form.grade_level.id }}">
+          {{ student_form.grade_level.label.text }}
+          <span class="text-danger">*</span>
+        </label>
+        {{ student_form.grade_level(class="form-select" + (" is-invalid" if
+        student_form.grade_level.errors else "")) }} {% for e in
+        student_form.grade_level.errors %}
+        <div class="invalid-feedback">{{ e }}</div>
+        {% endfor %}
+      </div>
+      <div class="form-group col-3">
+        <label for="{{ student_form.primary_phone.id }}">
+          {{ student_form.primary_phone.label.text }}
+          <span class="text-danger">*</span>
+        </label>
+        {{ student_form.primary_phone(class="form-control" + (" is-invalid" if
+        student_form.primary_phone.errors else "")) }} {% for e in
+        student_form.primary_phone.errors %}
+        <div class="invalid-feedback">{{ e }}</div>
+        {% endfor %}
+      </div>
+      <div class="form-group col-3">
+        <label for="{{ student_form.gender.id }}">
+          {{ student_form.gender.label.text }}
+          <span class="text-danger">*</span>
+        </label>
+        {{ student_form.gender(class="form-select" + (" is-invalid" if
+        student_form.gender.errors else "")) }} {% for e in
+        student_form.gender.errors %}
+        <div class="invalid-feedback">{{ e }}</div>
+        {% endfor %}
+      </div>
+      <div class="form-group col-3">
+        <label for="{{ student_form.date_of_birth.id }}">
+          {{ student_form.date_of_birth.label.text }}
+          <span class="text-danger">*</span>
+        </label>
+        {{ student_form.date_of_birth(class="form-control" + (" is-invalid" if
+        student_form.date_of_birth.errors else "")) }} {% for e in
+        student_form.date_of_birth.errors %}
+        <div class="invalid-feedback">{{ e }}</div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Address Row -->
+    <div class="form-row">
+      <div class="form-group col">
+        <label for="{{ student_form.address_street.id }}">
+          {{ student_form.address_street.label.text }}
+          <span class="text-danger">*</span>
+        </label>
+        {{ student_form.address_street(class="form-control" + (" is-invalid" if
+        student_form.address_street.errors else "")) }} {% for e in
+        student_form.address_street.errors %}
+        <div class="invalid-feedback">{{ e }}</div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col">
+        <label for="{{ student_form.address_city.id }}">
+          {{ student_form.address_city.label.text }}
+          <span class="text-danger">*</span>
+        </label>
+        {{ student_form.address_city(class="form-control" + (" is-invalid" if
+        student_form.address_city.errors else "")) }} {% for e in
+        student_form.address_city.errors %}
+        <div class="invalid-feedback">{{ e }}</div>
+        {% endfor %}
+      </div>
+      <div class="form-group col">
+        <label for="{{ student_form.address_state.id }}">
+          {{ student_form.address_state.label.text }}
+          <span class="text-danger">*</span>
+        </label>
+        {{ student_form.address_state(class="form-control" + (" is-invalid" if
+        student_form.address_state.errors else "")) }} {% for e in
+        student_form.address_state.errors %}
+        <div class="invalid-feedback">{{ e }}</div>
+        {% endfor %}
+      </div>
+      <div class="form-group col">
+        <label for="{{ student_form.address_zip.id }}">
+          {{ student_form.address_zip.label.text }}
+          <span class="text-danger">*</span>
+        </label>
+        {{ student_form.address_zip(class="form-control" + (" is-invalid" if
+        student_form.address_zip.errors else "")) }} {% for e in
+        student_form.address_zip.errors %}
+        <div class="invalid-feedback">{{ e }}</div>
+        {% endfor %}
+      </div>
+    </div>
+
+<!-- IEP / 504 / OTC -->
+<div class="form-group form-check">
+  {{ student_form.has_iep(class="form-check-input") }}
+  <label class="form-check-label" for="{{ student_form.has_iep.id }}">
+    {{ student_form.has_iep.label.text }}
+  </label>
+</div>
+<div class="form-group">
+  <label for="{{ student_form.iep_details.id }}">
+    {{ student_form.iep_details.label.text }}
+  </label>
+  {{ student_form.iep_details(
+       class="form-control" + (" is-invalid" if student_form.iep_details.errors else ""),
+       rows="3"
+     ) }}
+  {% for e in student_form.iep_details.errors %}
+    <div class="invalid-feedback">{{ e }}</div>
+  {% endfor %}
+</div>
+
+<div class="form-group form-check">
+  {{ student_form.has_504(class="form-check-input") }}
+  <label class="form-check-label" for="{{ student_form.has_504.id }}">
+    {{ student_form.has_504.label.text }}
+  </label>
+</div>
+<div class="form-group">
+  <label for="{{ student_form.plan504_details.id }}">
+    {{ student_form.plan504_details.label.text }}
+  </label>
+  {{ student_form.plan504_details(
+       class="form-control" + (" is-invalid" if student_form.plan504_details.errors else ""),
+       rows="3"
+     ) }}
+  {% for e in student_form.plan504_details.errors %}
+    <div class="invalid-feedback">{{ e }}</div>
+  {% endfor %}
+</div>
+
+<div class="form-group">
+  <label>{{ student_form.otc_permission.label.text }}</label>
+  <div>
+    {% for subfield in student_form.otc_permission %}
+      <div class="form-check form-check-inline">
+        {{ subfield(class="form-check-input") }}
+        <label class="form-check-label" for="{{ subfield.id }}">{{ subfield.label.text }}</label>
+      </div>
+    {% endfor %}
+  </div>
+  {% for e in student_form.otc_permission.errors %}
+    <div class="invalid-feedback d-block">{{ e }}</div>
+  {% endfor %}
+</div>
+
+    <!-- Health Alerts textarea -->
+<div class="form-group">
+  <label for="{{ student_form.health_issues.id }}">
+    {{ student_form.health_issues.label.text }}
+  </label>
+  {{ student_form.health_issues(class="form-control" + (" is-invalid" if student_form.health_issues.errors else ""), rows="4") }}
+  {% for e in student_form.health_issues.errors %}
+    <div class="invalid-feedback">{{ e }}</div>
+  {% endfor %}
+</div>
+<!-- Immunizations up-to-date? -->
+  <div class="form-group">
+    <label for="{{ student_form.immunizations_current.id }}">
+      {{ student_form.immunizations_current.label.text }}
+      <span class="text-danger">*</span>
+    </label>
+    {{ student_form.immunizations_current(
+         class="form-select" + (" is-invalid" if student_form.immunizations_current.errors else "")
+       ) }}
+    {% for e in student_form.immunizations_current.errors %}
+      <div class="invalid-feedback">{{ e }}</div>
+    {% endfor %}
+  </div>
+  <!-- Upload immunization record -->
+  <div class="form-group">
+    <label for="{{ student_form.immunization_record.id }}">
+      {{ student_form.immunization_record.label.text }}
+    </label>
+    {{ student_form.immunization_record(class="form-control-file") }}
+    {% for e in student_form.immunization_record.errors %}
+      <div class="invalid-feedback">{{ e }}</div>
+    {% endfor %}
+  </div>
+
+    <!-- Transferring -->
+    <div class="form-group">
+      <label for="{{ student_form.transferring.id }}">
+        {{ student_form.transferring.label.text }}
+        <span class="text-danger">*</span>
+      </label>
+      {{ student_form.transferring(class="form-select" + (" is-invalid" if
+      student_form.transferring.errors else "")) }} {% for e in
+      student_form.transferring.errors %}
+      <div class="invalid-feedback">{{ e }}</div>
+      {% endfor %}
+    </div>
+    <div id="prev-school-fields" class="ml-3" style="display: none">
+      <div class="form-group">
+        <label for="{{ student_form.prev_school_name.id }}">
+          {{ student_form.prev_school_name.label.text }}
+        </label>
+        {{ student_form.prev_school_name(class="form-control") }}
+      </div>
+      <div class="form-group">
+        <label for="{{ student_form.prev_school_address.id }}">
+          {{ student_form.prev_school_address.label.text }}
+        </label>
+        {{ student_form.prev_school_address(class="form-control") }}
+      </div>
+    </div>
+
+     <!-- Authorized pickups -->
+<div class="form-group">
+  <label for="{{ student_form.authorized_pickups.id }}">
+    {{ student_form.authorized_pickups.label.text }}
+  </label>
+  {% if student_form.authorized_pickups.description %}
+    <small class="form-text text-muted">
+      {{ student_form.authorized_pickups.description }}
+    </small>
+  {% endif %}
+  {{ student_form.authorized_pickups(
+       class="form-control" + (" is-invalid" if student_form.authorized_pickups.errors else "")
+     ) }}
+  {% for e in student_form.authorized_pickups.errors %}
+    <div class="invalid-feedback">{{ e }}</div>
+  {% endfor %}
+</div>
+
+  </fieldset>
+
+  <!-- CONTACTS -->
+  <fieldset class="mb-5 border rounded bg-light p-4">
+    <legend class="h5 text-primary px-2">Emergency / Family Contacts</legend>
+
+      <p class="mb-3">
+    Please provide three primary contacts for your student:
+    <strong>Contact #1</strong> should be the mother/guardian, <strong>Contact #2</strong> the father/guardian,
+    and <strong>Contact #3</strong> an emergency contact who does <em>not</em> live with the student.
+  </p>
+
+  <div class="form-group">
+    <label for="{{ student_form.guardian_relationship_status.id }}">
+      {{ student_form.guardian_relationship_status.label.text }}
+    </label>
+          <p class="mb-3">
+    If needed, please describe your child’s guardianship arrangement—e.g. adoption status, 
+    divorce or separation, custody agreements, any no-contact orders, 
+    or other circumstances the school should be aware of.<BR>
+    
+        
+      </p>
+    {{ student_form.guardian_relationship_status(
+         class="form-control" + (" is-invalid" if student_form.guardian_relationship_status.errors else "")
+       ) }}
+    {% for e in student_form.guardian_relationship_status.errors %}
+      <div class="invalid-feedback">{{ e }}</div>
+    {% endfor %}
+  </div>
+
+
+    {% for idx, cf in [(1,contact_form1),(2,contact_form2),(3,contact_form3)] %}
+      <div class="border p-3 mb-4">
+        <h4>Contact &#35;{{ idx }}{% if idx==1 %}<span class="text-danger">*</span>{% endif %}</h4>
+        {{ cf.hidden_tag() }}
+
+        <!-- Relationship -->
+        <div class="form-group">
+          <label for="{{ cf.relationship.id }}">{{ cf.relationship.label.text }}</label>
+          {{ cf.relationship(class="form-control") }}
+          {% for e in cf.relationship.errors %}
+            <div class="invalid-feedback">{{ e }}</div>
+          {% endfor %}
+          {% if idx == 3 %}
+  <p class="text-muted small">
+    **Note:** This contact #3 cannot be the <B><em>Mother or Father</em></B>.
+  </p>
+{% endif %}
+        </div>
+
+        <!-- Name Row -->
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="{{ cf.first_name.id }}">{{ cf.first_name.label.text }}</label>
+            {{ cf.first_name(class="form-control") }}
+          </div>
+          <div class="form-group col">
+            <label for="{{ cf.last_name.id }}">{{ cf.last_name.label.text }}</label>
+            {{ cf.last_name(class="form-control") }}
+          </div>
+        </div>
+
+        <!-- Gender / Email -->
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="{{ cf.gender.id }}">{{ cf.gender.label.text }}</label>
+            {{ cf.gender(class="form-control") }}
+          </div>
+          <div class="form-group col">
+            <label for="{{ cf.email_address.id }}">{{ cf.email_address.label.text }}</label>
+            {{ cf.email_address(class="form-control") }}
+          </div>
+        </div>
+
+<!-- Phones -->
+<div class="form-row">
+  <div class="form-group col">
+    <label for="{{ cf.mobile_phone.id }}">{{ cf.mobile_phone.label.text }}</label>
+    {{ cf.mobile_phone(class="form-control") }}
+  </div>
+  <div class="form-group col">
+    <label for="{{ cf.home_phone.id }}">{{ cf.home_phone.label.text }}</label>
+    {{ cf.home_phone(class="form-control") }}
+  </div>
+</div>
+
+
+        <!-- Address -->
+        <div class="form-group">
+          <label for="{{ cf.street.id }}">{{ cf.street.label.text }}</label>
+          {{ cf.street(class="form-control") }}
+        </div>
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="{{ cf.line_two.id }}">Address Line 2</label>
+            {{ cf.line_two(class="form-control") }}
+          </div>
+          <div class="form-group col">
+            <label for="{{ cf.city.id }}">{{ cf.city.label.text }}</label>
+            {{ cf.city(class="form-control") }}
+          </div>
+          <div class="form-group col">
+            <label for="{{ cf.state.id }}">{{ cf.state.label.text }}</label>
+            {{ cf.state(class="form-control") }}
+          </div>
+          <div class="form-group col">
+            <label for="{{ cf.postal_code.id }}">{{ cf.postal_code.label.text }}</label>
+            {{ cf.postal_code(class="form-control") }}
+          </div>
+        </div>
+
+<!-- Relationship Flags -->
+    {% set flags = ['has_custody','lives_with','can_pickup','receives_mail','emergency_contact'] %}
+    <div class="form-row">
+      {% for name in flags %}
+        {% set f = cf[name] %}
+        <div class="form-group col-auto">
+          <div class="form-check">
+            {{ f(class="form-check-input") }}
+            <label class="form-check-label" for="{{ f.id }}">
+              {{ f.label.text }}
+            </label>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    <HR>
+    {% endfor %}
+
+  </fieldset>
+<hr>
+<BR>
+
+  <!-- MEDIA RELEASE -->
+  <fieldset class="mb-4 border rounded bg-light p-4">
+    <legend class="h5 text-primary px-2">Media Release</legend>
+    {{ media_form.hidden_tag() }}
+
+    <div class="form-group">
+      <div class="scrollbox border p-2 mb-3">
+        I give permission to Liahona Preparatory Academy to use the image or
+        words of my child in its promotional materials. I understand these
+        materials may be presented in any format including paper, electronic,
+        and all other media, social and/or otherwise. Neither my child nor I
+        will receive any money or compensation in exchange for this permission.
+        Liahona Preparatory Academy will own the copyright to these materials,
+        and I waive on behalf of my child the right to sue for any use of my
+        child(ren)’s image or words that is done in good faith by Liahona
+        Preparatory Academy. Please read carefully before signing and dating the
+        section below:
+      </div>
+    </div>
+
+    <div class="form-group">
+      {{ media_form.signature.label(class="form-label") }} {{
+      media_form.signature(class="form-control" + (" is-invalid" if
+      media_form.signature.errors else ""), placeholder="Type your full name
+      here…") }} {% for e in media_form.signature.errors %}
+      <div class="invalid-feedback">{{ e }}</div>
+      {% endfor %}
+    </div>
+    
+
+    <div class="form-group form-check">
+      {{ media_form.agree(class="form-check-input") }}
+      <label class="form-check-label" for="{{ media_form.agree.id }}">
+        {{ media_form.agree.label.text }}
+      </label>
+      {% for e in media_form.agree.errors %}
+      <div class="text-danger small">{{ e }}</div>
+      {% endfor %}
+    </div>
+  </fieldset>
+
+
+  <!-- FIELD TRIP WAIVER -->
+  <fieldset class="mb-4 border rounded bg-light p-4">
+    <legend class="h5 text-primary px-2">Field Trip &amp; Activity Waiver</legend>
+    {{ waiver_form.hidden_tag() }}
+
+    <div class="form-group">
+      <div class="scrollbox border p-2 mb-3">
+        I, the above named parent/guardian, grant permission for my child to
+        participate in the above described field trip or activity. I acknowledge
+        that participation in this field trip or activity may involve moderate
+        to strenuous physical activity and may cause physical or emotional
+        distress to participants. There may also be associated health risks. I
+        warrant that student is free from any known heart, respiratory or other
+        health problems that could prevent student from safely participating in
+        any of the activities. I certify that I have medical insurance or
+        otherwise agree to be personally responsible for costs of any emergency
+        or other medical care that the student receives. I agree to release
+        Liahona Academy and their agencies, departments, owners, employees,
+        agents, and all sponsors, officials and staff or volunteers from the
+        cost of any medical care that the student receives as a result of
+        participation in this field trip or activity. I further agree to release
+        Liahona Academy, their owners, employees, sponsors, staff and volunteers
+        from any and all liability and causes of actions whatsoever for any
+        loss, claim, damage, injury, illness, attorney’s fees or harm of any
+        kind of nature to me arising out of student’s participation in this
+        field trip or activity. This release extends to any claim made by
+        parents or guardians or their assigns arising from or in any way
+        connected with the field trip, activity or event described above. I
+        agree to inform and explain to my child the safety procedures and
+        precautions necessary to participate in this field trip or activity. I
+        also agree to explain to my child the importance of behaving and
+        adhering to any and all instructions or rules of conduct given by the
+        teacher or supervisor in charge. I understand that my failure of my
+        child, the student, to adhere to any rules of conduct required by the
+        supervising teach/individual may result in injury. In the event of an
+        emergency, I give permission to transport my child to a hospital for
+        medical treatment and emergency aid, anesthesia and/or operation, if in
+        the opinion of the attending physician, such treatment is necessary.
+      </div>
+    </div>
+
+    <div class="form-group">
+      {{ waiver_form.signature.label(class="form-label") }} {{
+      waiver_form.signature(class="form-control" + (" is-invalid" if
+      waiver_form.signature.errors else ""), placeholder="Type your full name
+      here…") }} {% for e in waiver_form.signature.errors %}
+      <div class="invalid-feedback">{{ e }}</div>
+      {% endfor %}
+    </div>
+
+
+
+    <div class="form-group form-check">
+      {{ waiver_form.agree(class="form-check-input") }}
+      <label class="form-check-label" for="{{ waiver_form.agree.id }}">
+        {{ waiver_form.agree.label.text }}
+      </label>
+      {% for e in waiver_form.agree.errors %}
+      <div class="text-danger small">{{ e }}</div>
+      {% endfor %}
+    </div>
+  </fieldset>
+
+  <!-- MEDIA RELEASE -->
+  {{ media_form_section|safe }}
+
+  <!-- FIELD TRIP WAIVER -->
+  {{ waiver_form_section|safe }}
+
+        {% if student_form.errors or contact_form1.errors or contact_form2.errors or contact_form3.errors or media_form.errors or waiver_form.errors %}
+  <div class="alert alert-danger">
+    <h5>Please fix the following errors before submitting:</h5>
+    <ul class="mb-0">
+      {% for form in [student_form, contact_form1, contact_form2, contact_form3, media_form, waiver_form] %}
+        {% for field_name, errs in form.errors.items() %}
+          {% for err in errs %}
+            <li><strong>{{ form[field_name].label.text }}:</strong> {{ err }}</li>
+          {% endfor %}
+        {% endfor %}
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+
+ {# VOLUNTEER COMMITTEES #}
+<fieldset class="mb-5 border rounded bg-light p-4">
+  <legend class="h5 text-primary px-2">Parent Volunteer Committees</legend>
+
+  <p>
+    Liahona Preparatory Academy depends on parent volunteers to make these
+    events and services possible. Please pick at least two areas where you’d
+    like to help, and for each one tell us <strong>who</strong> will be the volunteer.<BR>
+        ***FOR EACH SELECTION PUT THE NAME AND PHONE NUMBER FOR THE VOLUNTEER***
+  </p>
+
+  {# protect against None on first GET #}
+  {% set selected = student_form.volunteer_committees.data or [] %}
+
+  {% for value, label in student_form.volunteer_committees.choices %}
+    <div class="form-row align-items-center mb-2">
+      <div class="col-auto form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          name="{{ student_form.volunteer_committees.name }}"
+          id="vc_{{ value }}"
+          value="{{ value }}"
+          {% if value in selected %}checked{% endif %}
+        >
+        <label class="form-check-label" for="vc_{{ value }}">{{ label }}</label>
+      </div>
+      <div class="col">
+        <input
+          type="text"
+          class="form-control form-control-sm"
+          name="volunteer_name_{{ value }}"
+          placeholder="Name for {{ label }}"
+          value="{{ request.form.get('volunteer_name_' ~ value, '') }}"
+        >
+      </div>
+    </div>
+  {% endfor %}
+
+  {% for err in student_form.volunteer_committees.errors %}
+    <div class="invalid-feedback d-block">{{ err }}</div>
+  {% endfor %}
+</fieldset>
+
+
+  <button type="submit" class="btn btn-primary">Submit Registration</button>
+</form>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    // Prev-school toggle
+    const trans = document.getElementById("{{ student_form.transferring.id }}"),
+      prev = document.getElementById("prev-school-fields");
+    const togglePrev = () =>
+      (prev.style.display = trans.value === "Yes" ? "block" : "none");
+    trans.addEventListener("change", togglePrev);
+    togglePrev();
+
+    // Additional contacts toggle
+    const yes = document.getElementById("add_more_yes"),
+      no = document.getElementById("add_more_no"),
+      more = document.getElementById("additional-contacts");
+    const toggleMore = () =>
+      (more.style.display = yes.checked ? "block" : "none");
+    yes.addEventListener("change", toggleMore);
+    no.addEventListener("change", toggleMore);
+    toggleMore();
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "base.html" %} {% block content %}
+<!-- Logo -->
+<div class="text-center my-4">
+  <img
+    src="{{ url_for('static', filename='assets/liahonalogo.png') }}"
+    alt="Liahona Academy Logo"
+    style="max-height: 120px"
+  />
+</div>
+
+<h1 class="mb-4 text-center">Registration Successful!</h1>
+
+<p class="text-center">
+  <a href="{{ url_for('registration.register') }}" class="btn btn-primary mr-2">
+    Register another student
+  </a>
+</p>
+{% endblock %}

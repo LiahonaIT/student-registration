@@ -1,0 +1,276 @@
+{# templates/admin.html #} {% extends "base.html" %} {% block content %}
+<div class="text-center my-4">
+  <img
+    src="{{ url_for('static', filename='assets/liahonalogo.png') }}"
+    alt="Liahona Academy Logo"
+    style="max-height: 100px"
+  />
+</div>
+<h1 class="mb-4">Registered Students</h1>
+
+<a href="{{ url_for('admin.download_csv') }}" class="btn btn-primary mb-3">
+  Download All as CSV
+</a>
+<a
+  href="{{ url_for('admin.volunteers') }}"
+  target="_blank"
+  rel="noopener noreferrer"
+  class="btn btn-secondary mb-3"
+>
+  View Volunteer Roster
+</a>
+
+{% if students %}
+<div class="table-responsive" style="max-height: 70vh; overflow-y: auto">
+  <table class="table table-striped table-sm">
+    <thead class="thead-light">
+      <tr>
+        <th class="sticky-top bg-white">ID</th>
+        <th class="sticky-top bg-white">Name</th>
+        <th class="sticky-top bg-white">Grade</th>
+        <th class="sticky-top bg-white">Address</th>
+        <th class="sticky-top bg-white">Phone</th>
+        <th class="sticky-top bg-white">IEP</th>
+        <th class="sticky-top bg-white">504 Plan</th>
+        <th class="sticky-top bg-white">Transfer</th>
+        <th class="sticky-top bg-white">OTC & Health Alerts</th>
+        <th class="sticky-top bg-white">Authorized Pickups</th>
+        <th class="sticky-top bg-white">Guardianship Arrangement</th>
+        <th class="sticky-top bg-white">Immun Record</th>
+        <th class="sticky-top bg-white">Media PDF</th>
+        <th class="sticky-top bg-white">Waiver PDF</th>
+        <th class="sticky-top bg-white">Volunteers</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for s in students %} {# —––––––––––––––––––––––––––––––––––––—————————
+      Student Row —–––––––––––––––––––––––––––––––––––––––––––––— #}
+      <tr>
+        <td>{{ s.id }}</td>
+        <td>
+          {{ s.first_name }} {% if s.preferred_name %} ({{ s.preferred_name }})
+          {% endif %} {{ s.last_name }}
+        </td>
+        <td>{{ s.grade_level }}</td>
+        <td>
+          {{ s.address_street }}, {{ s.address_city }}, {{ s.address_state }} {{
+          s.address_zip }}
+        </td>
+        <td>{{ s.primary_phone }}</td>
+
+        <td>
+          {{ 'Yes' if s.has_iep else 'No' }} {% if s.iep_details %}
+          <br /><small class="text-muted">{{ s.iep_details }}</small>
+          {% endif %}
+        </td>
+
+        <td>
+          {{ 'Yes' if s.has_504 else 'No' }} {% if s.plan504_details %}
+          <br /><small class="text-muted">{{ s.plan504_details }}</small>
+          {% endif %}
+        </td>
+
+        <td>
+          {{ 'Yes' if s.transferring else 'No' }} {% if s.transferring %}
+          <br /><small class="text-muted">
+            {{ s.prev_school_name }}<br />
+            {{ s.prev_school_address }}
+          </small>
+          {% endif %}
+        </td>
+
+        <td>
+          <strong>OTC:</strong> {{ 'Yes' if s.otc_permission else 'No' }}
+          <hr />
+          {{ s.health_issues or '—' }}
+        </td>
+
+        <td>
+          {% if s.authorized_pickups %}
+          <pre class="mb-0">{{ s.authorized_pickups }}</pre>
+          {% else %} &mdash; {% endif %}
+        </td>
+        <td>{{ s.guardian_relationship_status or '—' }}</td>
+        <td>
+          <strong>Uploaded:</strong> {{ 'Yes' if s.immunization_record else 'No'
+          }} {% if s.immunization_record %}
+          <br />
+          <a
+            href="{{ url_for('admin.view_upload', filename=s.immunization_record) }}"
+            target="_blank"
+            >View</a
+          >
+          |
+          <a
+            href="{{ url_for('admin.download_upload', filename=s.immunization_record) }}"
+            >Download</a
+          >
+          {% endif %}
+        </td>
+
+        <td>
+          <strong>Signed:</strong> {{ 'Yes' if s.media_pdf else 'No' }} {% if
+          s.media_pdf %}
+          <br />
+          <a
+            href="{{ url_for('admin.view_file', filename=s.media_pdf) }}"
+            target="_blank"
+            >View</a
+          >
+          |
+          <a href="{{ url_for('admin.download_file', filename=s.media_pdf) }}"
+            >Download</a
+          >
+          {% endif %}
+        </td>
+
+        <td>
+          <strong>Signed:</strong> {{ 'Yes' if s.waiver_pdf else 'No' }} {% if
+          s.waiver_pdf %}
+          <br />
+          <a
+            href="{{ url_for('admin.view_file', filename=s.waiver_pdf) }}"
+            target="_blank"
+            >View</a
+          >
+          |
+          <a href="{{ url_for('admin.download_file', filename=s.waiver_pdf) }}"
+            >Download</a
+          >
+          {% endif %}
+        </td>
+
+        <td>
+          <button
+            type="button"
+            class="btn btn-sm btn-outline-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#volModal{{ s.id }}"
+          >
+            View
+          </button>
+        </td>
+      </tr>
+      <!-- Volunteer Modal -->
+      <div
+        class="modal fade"
+        id="volModal{{ s.id }}"
+        tabindex="-1"
+        aria-labelledby="volModalLabel{{ s.id }}"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="volModalLabel{{ s.id }}">
+                Volunteer Assignments for {{ s.first_name }} {{ s.last_name }}
+              </h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              {% for key, name in s.vol_assign.items() %}
+              <p>
+                <strong>{{ committee_labels[key] }}:</strong>
+                {{ name or '—' }}
+              </p>
+              {% endfor %}
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {# —––––––––––––––––––––––––––––––––––––————————— Contacts Row + Modals
+      —–––––––––––––––––––––––––––––––––––––––––— #}
+      <tr>
+        <td colspan="14">
+          <strong>Contacts:</strong>
+          <ul class="list-unstyled mb-0">
+            {% for c in s.contacts %} {% set flags = [] %} {% if c.has_custody
+            %} {% set flags = flags + ['Has Custody'] %} {% endif %} {% if
+            c.lives_with %} {% set flags = flags + ['Lives with Student'] %} {%
+            endif %} {% if c.can_pickup %} {% set flags = flags + ['Can Pick
+            Up'] %} {% endif %} {% if c.receives_mail %} {% set flags = flags +
+            ['Receives Mail'] %} {% endif %} {% if c.emergency_contact %}{% set
+            flags = flags + ['Emergency Contact'] %}{% endif %} {{
+            c.relationship }} – {{ c.first_name }} {{ c.last_name }}
+            <button
+              type="button"
+              class="btn btn-sm btn-outline-secondary"
+              data-bs-toggle="modal"
+              data-bs-target="#contactModal{{ s.id }}{{ loop.index }}"
+            >
+              Details
+            </button>
+            ,
+
+            <div
+              class="modal fade"
+              id="contactModal{{ s.id }}{{ loop.index }}"
+              tabindex="-1"
+              aria-labelledby="contactModalLabel{{ s.id }}{{ loop.index }}"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5
+                      class="modal-title"
+                      id="contactModalLabel{{ s.id }}{{ loop.index }}"
+                    >
+                      {{ c.relationship }}: {{ c.first_name }} {{ c.last_name }}
+                    </h5>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                    ></button>
+                  </div>
+                  <div class="modal-body">
+                    <p><strong>Phone:</strong> {{ c.phone or '—' }}</p>
+                    <p><strong>Email:</strong> {{ c.email or '—' }}</p>
+                    <p>
+                      <strong>Address:</strong><br />
+                      {{ c.address_street or '—' }}<br />
+                      {% if c.address_city %}{{ c.address_city }}, {% endif %}
+                      {% if c.address_state %}{{ c.address_state }} {% endif %}
+                      {{ c.address_zip or '' }}
+                    </p>
+                    <p><strong>Flags:</strong> {{ flags|join(', ') or '—' }}</p>
+                  </div>
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      data-bs-dismiss="modal"
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </ul>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<p>No students have registered yet.</p>
+{% endif %} {% endblock %}

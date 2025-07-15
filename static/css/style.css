@@ -1,0 +1,141 @@
+/* style.css - Shared styles matching the Course Selector app */
+
+/* Global */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f8f9fa;
+  color: #212529;
+  margin: 0;
+  padding: 0;
+}
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Headings */
+h1 {
+  margin-bottom: 1.5rem;
+  font-size: 2rem;
+}
+h4 {
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+}
+
+/* Form */
+.form-group {
+  margin-bottom: 1rem;
+}
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+input.form-control,
+select.form-control,
+textarea.form-control {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+}
+
+fieldset {
+  border: 1px solid #dee2e6;
+  border-radius: 0.25rem;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  background-color: #ffffff;
+}
+legend {
+  font-weight: bold;
+  padding: 0 0.5rem;
+}
+
+/* Contact blocks */
+.contact-block {
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background-color: #ffffff;
+}
+
+/* Signature pads */
+.signature-pad {
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  width: 100%;
+  height: 200px;
+}
+button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border-radius: 0.25rem;
+  border: none;
+}
+.btn-primary {
+  background-color: #007bff;
+  color: #fff;
+}
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+/* Tables */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+.table th,
+.table td {
+  padding: 0.75rem;
+  border: 1px solid #dee2e6;
+}
+.table thead {
+  background-color: #e9ecef;
+}
+
+/* Utility classes */
+.text-center {
+  text-align: center;
+}
+.mt-5 {
+  margin-top: 3rem;
+}
+.mb-3 {
+  margin-bottom: 1rem;
+}
+/* logo styling */
+.logo {
+  max-width: 200px;
+  height: auto;
+}
+/* invalid field highlighting */
+.is-invalid {
+  border-color: #dc3545;
+}
+.invalid-feedback {
+  display: block;
+}
+/* collapse button styling (optional) */
+.btn-link {
+  text-decoration: none;
+}
+/* make all .form-control inputs a bit narrower on large screens */
+@media (min-width: 992px) {
+  .form-group.col-lg-2 .form-control {
+    max-width: 120px;
+  }
+  .form-group.col-lg-5 .form-control {
+    max-width: 300px;
+  }
+}
+.scrollbox {
+  max-height: 100px;
+  overflow-y: auto;
+  white-space: pre-wrap; /* preserve paragraph breaks */
+}

@@ -1,0 +1,23 @@
+{# templates/admin_volunteers.html #} {% extends "base.html" %} {% block content
+%}
+<div class="text-center my-4">
+  <img
+    src="{{ url_for('static', filename='assets/liahonalogo.png') }}"
+    alt="Liahona Academy Logo"
+    style="max-height: 100px"
+  />
+</div>
+<h1 class="mb-4">Volunteer Sign-ups</h1>
+
+{% if roster %} {% for code, names in roster.items() %}
+<div class="mb-4">
+  <h3 class="h5">{{ labels[code] }}</h3>
+  <ul class="list-unstyled ps-3">
+    {% for entry in names %}
+    <li>{{ entry }}</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endfor %} {% else %}
+<p>No volunteers have signed up yet.</p>
+{% endif %} {% endblock %}
