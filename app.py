@@ -1,11 +1,9 @@
-# app.py
-
 import os
 from flask import Flask, request, flash, redirect, url_for
 from werkzeug.exceptions import RequestEntityTooLarge
 
 from config import Config
-from models import db
+from extensions import db, mail
 from auth import auth_bp, login_manager
 from registration import registration_bp
 from admin import admin_bp
@@ -16,6 +14,7 @@ app.config.from_object(Config)
 
 # ——— 2) Bind extensions ———
 db.init_app(app)
+mail.init_app(app)
 
 # ——— 3) Init Flask-Login (only once!) ———
 login_manager.init_app(app)

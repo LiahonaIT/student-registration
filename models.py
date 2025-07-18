@@ -1,8 +1,6 @@
-from flask_sqlalchemy import SQLAlchemy
+from extensions import db
 from datetime import date
 
-# Instantiate the single db here
-db = SQLAlchemy()
 
 class Student(db.Model):
     __tablename__ = 'students'
@@ -37,6 +35,9 @@ class Student(db.Model):
     volunteer_committees  = db.Column(db.String(512))   # comma-separated keys
     volunteer_assignments = db.Column(db.Text)           # JSON map key→name
     guardian_relationship_status = db.Column(db.Text)
+    immunization_verified  = db.Column(db.Boolean, default=False, nullable=False)
+    selection_token        = db.Column(db.String(36), nullable=True)
+    token_used             = db.Column(db.Boolean, default=False, nullable=False)
 
     # Relationships
     contacts = db.relationship('Contact', backref='student', lazy=True)

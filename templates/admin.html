@@ -107,7 +107,20 @@
           >
           {% endif %}
         </td>
-
+        <td>
+          {% if not s.immunization_verified %}
+          <form
+            method="post"
+            action="{{ url_for('admin.approve_student', student_id=s.id) }}"
+          >
+            <button class="btn btn-sm btn-primary">
+              Approve &amp; Send Link
+            </button>
+          </form>
+          {% else %}
+          <span class="badge bg-success">Approved</span>
+          {% endif %}
+        </td>
         <td>
           <strong>Signed:</strong> {{ 'Yes' if s.media_pdf else 'No' }} {% if
           s.media_pdf %}

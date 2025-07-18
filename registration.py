@@ -1,5 +1,3 @@
-# registration.py
-
 import os
 import json
 from pathlib import Path
@@ -14,7 +12,7 @@ from reportlab.lib.pagesizes import letter
 from reportlab.lib.utils import simpleSplit, ImageReader
 from reportlab.pdfgen import canvas
 
-from app import db
+from extensions import db
 from models import Student, Contact
 from forms import (
     StudentForm, ContactForm,
@@ -62,7 +60,11 @@ def generate_media_pdf(student, media_form):
     body = (
         f"I give permission to Liahona Preparatory Academy to use the image or words "
         f"of my child, {student.first_name} {student.last_name}, in its promotional materials. "
-        "I understand these materials may be presented in any format…"
+        "I understand these materials may be presented in any format including paper, electronic, "
+        "and all other media, social or otherwise. Neither my child nor I will receive any money "
+        "or compensation in exchange for this permission. Liahona Preparatory Academy will own the "
+        "copyright to these materials, and I waive on behalf of my child the right to sue for any "
+        "use of my child(ren)’s image or words that is done in good faith by Liahona Preparatory Academy."
     )
     lines = simpleSplit(body, "Helvetica", 10, page_w - 80)
     y = y_logo - 60
@@ -74,21 +76,20 @@ def generate_media_pdf(student, media_form):
         c.drawString(40, y, line)
         y -= 14
 
-    # Footer
+    # Footer with signature
     footer_y = y - 20
     c.setFont("Helvetica", 10)
     c.drawString(40, footer_y,
                  f"Student Name: {student.first_name} {student.last_name}")
 
-    # Signature
     label   = "Parent/Guardian Signature: "
     c.drawString(40, footer_y - 25, label)
-    label_w = c.stringWidth(label, "Helvetica", 10)
     c.setFont("Helvetica-BoldOblique", 16)
-    c.drawString(40 + label_w, footer_y - 25,
+    c.drawString(40 + c.stringWidth(label, "Helvetica", 10),
+                 footer_y - 25,
                  media_form.signature.data)
 
-    # Date (auto-filled)
+    # Date
     date_str = date.today().strftime("%Y-%m-%d")
     c.setFont("Helvetica", 10)
     c.drawString(40, footer_y - 50,
@@ -124,11 +125,23 @@ def generate_waiver_pdf(student, waiver_form):
     tw = c.stringWidth(title, "Helvetica-Bold", 18)
     c.drawString((page_w - tw)/2, y_logo - 30, title)
 
-    # Body
+    # Body text
     c.setFont("Helvetica", 10)
     body = (
-        f"I, the above named parent/guardian, grant permission for "
-        f"{student.first_name} {student.last_name} to participate in the above described field trip…"
+        f"I, the above named parent/guardian, grant permission for {student.first_name} {student.last_name} "
+        "to participate in any school sponsored field trip or activity. I acknowledge that participation "
+        "in this field trip or activity may involve moderate to strenuous physical activity and may cause "
+        "physical or emotional distress to participants. There may also be associated health risks. I warrant "
+        "that student is free from any known heart, respiratory or other health problems that could prevent student "
+        "from safely participating in any of the activities. I certify that I have medical insurance or otherwise "
+        "agree to be personally responsible for costs of any emergency or other medical care that the student receives. "
+        "I agree to release Liahona Academy and their agencies, departments, owners, employees, agents, and all sponsors, "
+        "officials and staff or volunteers from the cost of any medical care that the student receives as a result of participation. "
+        "I further agree to release Liahona Academy, their owners, employees, sponsors, staff and volunteers from any and all "
+        "liability and causes of actions whatsoever for any loss, claim, damage, injury, illness, attorney’s fees or harm of any kind. "
+        "This release extends to any claim made by parents or guardians or their assigns arising from or in any way connected with the field trip. "
+        "I agree to inform and explain to my child the safety procedures and precautions necessary to participate, and I also agree to explain to my child "
+        "the importance of behaving and adhering to any and all instructions or rules of conduct given by the teacher or supervisor in charge."
     )
     lines = simpleSplit(body, "Helvetica", 10, page_w - 80)
     y = y_logo - 60
@@ -140,18 +153,17 @@ def generate_waiver_pdf(student, waiver_form):
         c.drawString(40, y, line)
         y -= 14
 
-    # Footer
+    # Footer with signature
     footer_y = y - 20
     c.setFont("Helvetica", 10)
     c.drawString(40, footer_y,
                  f"Student Name: {student.first_name} {student.last_name}")
 
-    # Signature
     label   = "Parent Signature: "
     c.drawString(40, footer_y - 25, label)
-    label_w = c.stringWidth(label, "Helvetica", 10)
     c.setFont("Helvetica-BoldOblique", 16)
-    c.drawString(40 + label_w, footer_y - 25,
+    c.drawString(40 + c.stringWidth(label, "Helvetica", 10),
+                 footer_y - 25,
                  waiver_form.signature.data)
 
     # Date
@@ -179,20 +191,19 @@ def register():
         ('Other',   'Other'),
     ]
 
-    if ( request.method == 'POST'
-         and student_form.validate_on_submit()
-         and contact_form1.validate()
-         and contact_form2.validate()
-         and contact_form3.validate()
-         and media_form.validate()
-         and waiver_form.validate() ):
-        
-                # — Build your volunteer assignments dict —
+    if (
+        request.method == 'POST'
+        and student_form.validate_on_submit()
+        and contact_form1.validate()
+        and contact_form2.validate()
+        and contact_form3.validate()
+        and media_form.validate()
+        and waiver_form.validate()
+    ):
+        # — Build volunteer assignments dict —
         assignments_dict = {}
-        # student_form.volunteer_committees.data is a list of the checked values
-        for code, label in student_form.volunteer_committees.choices:
+        for code, _label in student_form.volunteer_committees.choices:
             if code in (student_form.volunteer_committees.data or []):
-                # pull the text input named volunteer_name_<code>
                 name = request.form.get(f"volunteer_name_{code}", "").strip()
                 assignments_dict[code] = name
 
@@ -205,7 +216,7 @@ def register():
         else:
             immunization_fname = None
 
-        # — Create and flush Student —
+        # — Create Student record —
         student = Student(
             school                = student_form.school.data,
             first_name            = student_form.first_name.data,
@@ -231,32 +242,12 @@ def register():
             transferring          = (student_form.transferring.data == 'Yes'),
             prev_school_name      = student_form.prev_school_name.data,
             prev_school_address   = student_form.prev_school_address.data,
-            volunteer_committees = ",".join(student_form.volunteer_committees.data or []),
+            volunteer_committees  = ",".join(student_form.volunteer_committees.data or []),
             volunteer_assignments = json.dumps(assignments_dict),
-            guardian_relationship_status = student_form.guardian_relationship_status.data,
-         )
-
-        if request.method == 'POST' and student_form.validate_on_submit() and ... :
-            # … your existing code …
-            # Build a dict of volunteer names keyed by committee value
-            vols = {}
-            for choice in student_form.volunteer_committees.data:
-                vols[choice] = request.form.get(f'vol_name_{choice}', '').strip()
-
-    # Now store it on Student — either as JSON or a comma-joined string:
-            student.volunteer_committees = ",".join(student_form.volunteer_committees.data)
-            student.volunteer_assignments = json.dumps(assignments_dict)
-
+            guardian_relationship_status = student_form.guardian_relationship_status.data
+        )
         db.session.add(student)
-        db.session.flush()   # now student.id is set
-
-        selected = student_form.volunteer_committees.data      # e.g. ['prom','holiday']
-        student.volunteer_committees = ",".join(selected)
-        assignments = {
-            key: request.form.get(f"volunteer_name_{key}", "").strip()
-            for key in selected
-}
-        student.volunteer_assignments = json.dumps(assignments)
+        db.session.flush()  # now student.id is available
 
         # — Generate PDFs —
         generate_media_pdf(student, media_form)
@@ -268,19 +259,11 @@ def register():
                 student_id    = sid,
                 priority      = str(priority),
                 relationship  = cf.relationship.data,
-                prefix        = None,
-                middle_name   = None,
-                suffix        = None,
-                employer      = None,
                 first_name    = cf.first_name.data,
                 last_name     = cf.last_name.data,
                 gender        = cf.gender.data or None,
                 email         = cf.email_address.data or None,
-                email_type    = None,
-                email_primary = False,
                 phone         = cf.mobile_phone.data or None,
-                phone_type    = None,
-                phone_primary = False,
                 address_street= cf.street.data or None,
                 address_city  = cf.city.data or None,
                 address_state = cf.state.data or None,
@@ -289,7 +272,7 @@ def register():
                 lives_with        = bool(cf.lives_with.data),
                 can_pickup        = bool(cf.can_pickup.data),
                 receives_mail     = bool(cf.receives_mail.data),
-                emergency_contact = bool(cf.emergency_contact.data),
+                emergency_contact = bool(cf.emergency_contact.data)
             )
 
         contacts = [
@@ -311,8 +294,25 @@ def register():
         contact_form2  = contact_form2,
         contact_form3  = contact_form3,
         media_form     = media_form,
-        waiver_form    = waiver_form,
+        waiver_form    = waiver_form
     )
+
+
+@registration_bp.route('/select/<token>')
+def select_with_token(token):
+    sub = Student.query.filter_by(
+        selection_token      = token,
+        immunization_verified = True
+    ).first()
+    if not sub or sub.token_used:
+        flash("Invalid or expired link. Please register first.", "danger")
+        return redirect(url_for('registration.register'))
+
+    sub.token_used = True
+    db.session.commit()
+
+    # forward into your course‐picker/edit view
+    return redirect(url_for('registration.edit_form', email=sub.email))
 
 
 @registration_bp.route('/success')
